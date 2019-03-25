@@ -1,0 +1,51 @@
+(ql:quickload :lispbuilder-sdl
+              :silent nil)
+
+(defparameter width 1000)
+(defparameter height 1000)
+(defparameter row 1000)
+(defparameter column 1000)
+(defparameter matrix nil)
+(defparameter density nil)
+(defparameter nb 0)
+(defparameter *random* 0)
+(defparameter *toggle* 0)
+(defparameter *fingerprint* 0)
+(defparameter *step* 10)
+(defparameter *zoom* 2)
+(defparameter *speed* 5)
+(defparameter *max-zoom* 100)
+(defparameter *min-zoom* 2)
+(defparameter *white* sdl:*white*)
+(defparameter *black* sdl:*black*)
+(defparameter *gray* (sdl:color :r 128 :g 128 :b 128))
+(defparameter *red* (sdl:color :r 255 :g 160 :b 122))
+
+(setq matrix (make-array (list row column) :initial-element 0))
+(setq density (make-array (list row column) :initial-element 0))
+
+(defvar curr-time 0)
+(defvar last-time 0)
+(defvar last-x 0)
+(defvar last-y 0)
+(defvar bsize 15)
+(defvar xn 0)
+(defvar yn 0)
+(defvar v 20)
+(defvar p 1)
+
+(load "src/parse_input.lisp")
+(load "src/gol_algo.lisp")
+(load "src/gol_sdl.lisp")
+
+
+(defun main (av)
+  (parse-input av)
+  (when (equal *random* 1) (setq matrix (random-matrix)))
+  (gol-launcher)
+  (sb-ext:exit)
+  )
+
+(sb-int:with-float-traps-masked
+  (:invalid :inexact :overflow)
+  (main *posix-argv*))
